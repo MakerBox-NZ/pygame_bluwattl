@@ -2,9 +2,35 @@
 import pygame
 import sys
 import os
+import turtle
 '''OBJECTS'''
+class Platform(pygame.sprite.Sprite):
+    '''
+    Create a platform
+    '''
+    # x location, y location, image width, image height, image file    
+    def __init__(self,xloc,yloc,imgw,imgh,img):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([imgw,imgh])
+        self.image.convert_alpha()
+        self.image.set_colorkey(alpha)
+        self.blockpic = pygame.image.load(img).convert()
+        self.rect = self.image.get_rect()
+        self.rect.y = yloc
+        self.rect.x = xloc
+        
+        # paint the image into the blocks
+        self.image.blit(self.blockpic,(0,0),(0,0,imgw,imgh))
+
+
+    def level1():
+        platform_list = pygame.sprite.Group()
+        block = Platform(0, 200, 768, 218, os.path.join('images', 'block0.png'))
+        platform_list.add(block)
+
+        return platform_list
 class Player(pygame.sprite.Sprite):
-    #spawn and dab FAKE
+    #spawn
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.momentumX = 0
@@ -21,7 +47,7 @@ class Player(pygame.sprite.Sprite):
         #print('in control') #debug
         self.momentumX += x
         self.momentumY += y
-    def update(self):
+    def update(self,enemy_list):
         #print('update') #debug
         currentX = self.rect.x
         nextX = currentX + self.momentumX
@@ -63,6 +89,7 @@ main = True
 screen = pygame.display.set_mode([screenX, screenY])
 backdrop = pygame.image.load(os.path.join('images','background.png')).convert()
 backdropRect = screen.get_rect()
+platform_list = Platform.level1()
 player = Player() #Spawn REAL
 player.rect.x = 0
 player.rect.y = 0
@@ -85,6 +112,12 @@ while main == True:
                player.control(movesteps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'): 
                player.control(-movesteps, 0)
+            if event.key == ord(')'):
+                print('           o    o  ')
+                print('         \        /')
+                print('          \      / ')
+                print('           \____/  ')
+                print('   You found the secret!       ')
             if event.key == pygame.K_UP or event.key == ord('w'):
                pass
         if event.type == pygame.KEYDOWN:
@@ -98,7 +131,8 @@ while main == True:
                pass
 
     screen.blit(backdrop, backdropRect)
-    player.update()
+    platform_list.draw(screen)
+    player.update(enemy_list)
     movingsprites.draw(screen)
     enemy_list.draw(screen)
     enemy.move()
