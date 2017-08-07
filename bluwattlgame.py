@@ -35,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.momentumX = 0
         self.momentumY = 0
+        self.score = 0
         self.images = [ ]
         img = pygame.image.load(os.path.join('images','hero.png')).convert()
         self.images.append(img)
@@ -55,6 +56,10 @@ class Player(pygame.sprite.Sprite):
         currentY = self.rect.y
         nextY = currentY + self.momentumY
         self.rect.y = nextY
+        enemy_hit_list = pygame.sprite.spritecollide(self, enemy_list, False)
+        for enemy in enemy_hit_list:
+            self.score -= 1
+            print(self.score)
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
         pygame.sprite.Sprite.__init__(self)
