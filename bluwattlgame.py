@@ -15,6 +15,7 @@ class Platform(pygame.sprite.Sprite):
         self.image.convert_alpha()
         self.image.set_colorkey(alpha)
         self.blockpic = pygame.image.load(img).convert()
+        self.image = pygame.transform.scale(self.image, (int(50), int(10)))
         self.rect = self.image.get_rect()
         self.rect.y = yloc
         self.rect.x = xloc
@@ -25,9 +26,8 @@ class Platform(pygame.sprite.Sprite):
 
     def level1():
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 200, 768, 218, os.path.join('images', 'block0.png'))
+        block = Platform(0, 200, 500, 77, os.path.join('images', 'block0.png'))
         platform_list.add(block)
-
         return platform_list
 class Player(pygame.sprite.Sprite):
     #spawn
@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
         #print('in control') #debug
         self.momentumX += x
         self.momentumY += y
-    def update(self,enemy_list):
+    def update(self,enemy_list,platform_list):
         #print('update') #debug
         currentX = self.rect.x
         nextX = currentX + self.momentumX
@@ -60,6 +60,22 @@ class Player(pygame.sprite.Sprite):
         for enemy in enemy_hit_list:
             self.score -= 1
             print(self.score)
+
+        block_hit_list = pygame.sprite.spritecollide(self, platform_list, False)
+        if self.momentumX > 0:
+            for block in block_hit_list:
+                self.rect.y = currentY
+                self.rect.x = currentX+9
+                self.momentumY = 0
+        if self.momentumY > 0:
+            for block in block_hit_list:
+                self.rect.y = currentY
+                self.momentumY = 0  
+    def gravity(self):
+        self.momentumY += 3.2
+        if self.rect.y > 960 and self.momentumY >= 0:
+            self.momentumY = 0
+            self.rect.y = screenY-20
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
         pygame.sprite.Sprite.__init__(self)
@@ -81,8 +97,8 @@ class Enemy(pygame.sprite.Sprite):
 
         self.counter += 1
 '''SETUP'''
-screenX = 360 * 4
-screenY = 240 * 4
+screenX = 480
+screenY = 360
 alpha = (0,0,0)
 black = (1,1,1)
 white = (255,255,255)
@@ -117,7 +133,7 @@ while main == True:
                player.control(movesteps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'): 
                player.control(-movesteps, 0)
-            if event.key == ord(')'):
+            if event.key == ord('0'):
                 print('           o    o  ')
                 print('         \        /')
                 print('          \      / ')
@@ -137,7 +153,8 @@ while main == True:
 
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
-    player.update(enemy_list)
+    player.gravity()
+    player.update(enemy_list, platform_list)
     movingsprites.draw(screen)
     enemy_list.draw(screen)
     enemy.move()
