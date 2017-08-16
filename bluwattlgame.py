@@ -15,7 +15,7 @@ class Platform(pygame.sprite.Sprite):
         self.image.convert_alpha()
         self.image.set_colorkey(alpha)
         self.blockpic = pygame.image.load(img).convert()
-        self.image = pygame.transform.scale(self.image, (int(50), int(10)))
+        #self.image = pygame.transform.scale(self.image, (int(50), int(10)))
         self.rect = self.image.get_rect()
         self.rect.y = yloc
         self.rect.x = xloc
@@ -35,6 +35,8 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.momentumX = 0
         self.momentumY = 0
+        self.collide_delta = 0
+        self.jump_delta = 0
         self.score = 0
         self.images = [ ]
         img = pygame.image.load(os.path.join('images','hero.png')).convert()
@@ -56,6 +58,13 @@ class Player(pygame.sprite.Sprite):
         currentY = self.rect.y
         nextY = currentY + self.momentumY
         self.rect.y = nextY
+
+        if self.collide_delta < 6 and self.jump_delta < 6:
+            self.jump_delta = 6*2
+            self.momentumY -=33
+            self.collide_delta += 6
+            self.jump_delta += 6
+    
         enemy_hit_list = pygame.sprite.spritecollide(self, enemy_list, False)
         for enemy in enemy_hit_list:
             self.score -= 1
@@ -67,10 +76,14 @@ class Player(pygame.sprite.Sprite):
                 self.rect.y = currentY
                 self.rect.x = currentX+9
                 self.momentumY = 0
+                self.collide_delta = 0
         if self.momentumY > 0:
             for block in block_hit_list:
                 self.rect.y = currentY
-                self.momentumY = 0  
+                self.momentumY = 0
+                self.collide_delta = 0
+    def jump (self, platform_list):
+        self.jump_delta = 0
     def gravity(self):
         self.momentumY += 3.2
         if self.rect.y > 960 and self.momentumY >= 0:
@@ -116,6 +129,8 @@ player.rect.x = 0
 player.rect.y = 0
 movingsprites = pygame.sprite.Group()
 movingsprites.add(player)
+forwardX = 600
+backwardX = 150
 movesteps = 10
 enemy = Enemy(100, 50, 'badguy.png')
 enemy_list = pygame.sprite.Group()
@@ -149,8 +164,21 @@ while main == True:
                pass
                player.control(movesteps, 0)
             if event.key == pygame.K_UP or event.key == ord('w'):
-               pass
-
+               player.jump(platform_list)
+    if player.rect.x >= forwardX:
+        scroll = player.rect.x - forwardX
+        player.rect.x = forwardX
+        for platform in platform_list:
+            platform.rect.x += scroll
+        for enemy in enemy_list:
+            enemy.rect.x -= scroll
+    if player.rect.x <= backwardX:
+        scroll = min(1, (backwardX - player.rect.x))
+        player.rect.x = backwardX
+        for platform in platform_list:
+            platform.rect.x += scroll
+        for enemy in enemy_list:
+            enemy.rect.x += scroll
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
     player.gravity()
