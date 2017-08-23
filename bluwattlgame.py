@@ -3,7 +3,15 @@ import pygame
 import sys
 import os
 import turtle
+import pygame.freetype
 '''OBJECTS'''
+
+def stats(score):
+    #display text, 1, colour (rgb)
+    
+    text_score = myfont.render("Score: "+str(score), 1, (45, 126, 255))
+    screen.blit(text_score, (4, 4))
+
 class Platform(pygame.sprite.Sprite):
     '''
     Create a platform
@@ -26,11 +34,11 @@ class Platform(pygame.sprite.Sprite):
 
     def level1():
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 200, 101, 77, os.path.join('images', 'block0.png'))
+        block = Platform(0, 200, 77, 101, os.path.join('images', 'block0.png'))
         platform_list.add(block)
-        block = Platform(77, 200, 101, 77, os.path.join('images', 'block1.png'))
+        block = Platform(101, 200, 77, 101, os.path.join('images', 'block1.png'))
         platform_list.add(block)
-        block = Platform(154, 200, 101, 77, os.path.join('images', 'block0.png'))
+        block = Platform(202, 200, 77, 101, os.path.join('images', 'block0.png'))
         platform_list.add(block)
         return platform_list
 class Player(pygame.sprite.Sprite):
@@ -42,6 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.collide_delta = 0
         self.jump_delta = 0
         self.score = 0
+        self.damage = 0
         self.images = [ ]
         img = pygame.image.load(os.path.join('images','hero.png')).convert()
         self.images.append(img)
@@ -70,10 +79,22 @@ class Player(pygame.sprite.Sprite):
             self.jump_delta += 6
     
         enemy_hit_list = pygame.sprite.spritecollide(self, enemy_list, False)
-        for enemy in enemy_hit_list:
+        '''for enemy in enemy_hit_list:
             self.score -= 1
-            print(self.score)
+            print(self.score)'''
 
+        if self.damage == 0:
+            for enemy in enemy_hit_list:
+                if not self.rect.contains(enemy):
+                    self.damage = self.rect.colliderect(enemy)
+                    print(self.score)
+
+        if self.damage == 1:
+            idx = self.rect.collidelist(enemy_hit_list)
+            if idx == -1:
+                self.damage = 0
+                self.score -= 1
+        
         block_hit_list = pygame.sprite.spritecollide(self, platform_list, False)
         if self.momentumX > 0:
             for block in block_hit_list:
@@ -123,6 +144,11 @@ fps = 40
 afps = 4
 clock = pygame.time.Clock()
 pygame.init()
+pygame.font.init()
+
+font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fonts", "Fredoka One.ttf")
+font_size = 24
+myfont = pygame.font.Font(font_path, font_size)
 main = True
 screen = pygame.display.set_mode([screenX, screenY])
 backdrop = pygame.image.load(os.path.join('images','background.png')).convert()
@@ -190,5 +216,6 @@ while main == True:
     movingsprites.draw(screen)
     enemy_list.draw(screen)
     enemy.move()
+    stats(player.score)
     pygame.display.flip()
     clock.tick(fps)
