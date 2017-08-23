@@ -26,7 +26,11 @@ class Platform(pygame.sprite.Sprite):
 
     def level1():
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 200, 500, 77, os.path.join('images', 'block0.png'))
+        block = Platform(0, 200, 101, 77, os.path.join('images', 'block0.png'))
+        platform_list.add(block)
+        block = Platform(77, 200, 101, 77, os.path.join('images', 'block1.png'))
+        platform_list.add(block)
+        block = Platform(154, 200, 101, 77, os.path.join('images', 'block0.png'))
         platform_list.add(block)
         return platform_list
 class Player(pygame.sprite.Sprite):
@@ -169,7 +173,7 @@ while main == True:
         scroll = player.rect.x - forwardX
         player.rect.x = forwardX
         for platform in platform_list:
-            platform.rect.x += scroll
+            platform.rect.x -= scroll
         for enemy in enemy_list:
             enemy.rect.x -= scroll
     if player.rect.x <= backwardX:
