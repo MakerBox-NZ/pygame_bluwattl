@@ -34,11 +34,25 @@ class Platform(pygame.sprite.Sprite):
 
     def level1():
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 200, 77, 101, os.path.join('images', 'block0.png'))
+        block = Platform(0, 200, 101, 77, os.path.join('images', 'block0.png'))
         platform_list.add(block)
-        block = Platform(101, 200, 77, 101, os.path.join('images', 'block1.png'))
+        block = Platform(101, 200, 101, 77, os.path.join('images', 'block1.png'))
         platform_list.add(block)
-        block = Platform(202, 200, 77, 101, os.path.join('images', 'block2.png'))
+        block = Platform(202, 200, 101, 77, os.path.join('images', 'block2.png'))
+        platform_list.add(block)
+        block = Platform(303, 200, 101, 77, os.path.join('images', 'block3.png'))
+        platform_list.add(block)
+        block = Platform(404, 200, 101, 77, os.path.join('images', 'block4.png'))
+        platform_list.add(block)
+        block = Platform(505, 200, 101, 77, os.path.join('images', 'block0.png'))
+        platform_list.add(block)
+        block = Platform(606, 200, 101, 77, os.path.join('images', 'block1.png'))
+        platform_list.add(block)
+        block = Platform(707, 200, 101, 77, os.path.join('images', 'block2.png'))
+        platform_list.add(block)
+        block = Platform(808, 200, 101, 77, os.path.join('images', 'block3.png'))
+        platform_list.add(block)
+        block = Platform(909, 200, 101, 77, os.path.join('images', 'block4.png'))
         platform_list.add(block)
         return platform_list
     def loot1():
@@ -46,6 +60,11 @@ class Platform(pygame.sprite.Sprite):
         loot = Platform(150, 180, 32, 32, os.path.join('images', 'steak.png'))
         loot_list.add(loot)
         return loot_list
+    def evolution1():
+        evol_list = pygame.sprite.Group()
+        evol = Platform(500, 160, 32, 32, os.path.join('images', 'steak.png'))
+        evol_list.add(evol)
+        return evol_list
 class Player(pygame.sprite.Sprite):
     #spawn
     def __init__(self):
@@ -68,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         #print('in control') #debug
         self.momentumX += x
         self.momentumY += y
-    def update(self,enemy_list,platform_list,loot_list):
+    def update(self,enemy_list,platform_list,loot_list, evol_list):
         #print('update') #debug
         currentX = self.rect.x
         nextX = currentX + self.momentumX
@@ -166,13 +185,14 @@ backdrop = pygame.image.load(os.path.join('images','background.png')).convert()
 backdropRect = screen.get_rect()
 platform_list = Platform.level1()
 loot_list = Platform.loot1()
+evol_list = Platform.evolution1()
 player = Player() #Spawn REAL
 player.rect.x = 0
 player.rect.y = 0
 movingsprites = pygame.sprite.Group()
 movingsprites.add(player)
-forwardX = 600
-backwardX = 150
+forwardX = 300
+backwardX = 100
 movesteps = 10
 enemy = Enemy(100, 50, 'badguy.png')
 enemy_list = pygame.sprite.Group()
@@ -216,6 +236,8 @@ while main == True:
             enemy.rect.x -= scroll
         for loot in loot_list:
             enemy.rect.x -= scroll
+        for evol in evol_list:
+            platform.rect.x -= scroll
     if player.rect.x <= backwardX:
         scroll = min(1, (backwardX - player.rect.x))
         player.rect.x = backwardX
@@ -225,13 +247,16 @@ while main == True:
             enemy.rect.x += scroll
         for loot in loot_list:
             enemy.rect.x += scroll
+        for evol in evol_list:
+            platform.rect.x += scroll
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
     player.gravity()
-    player.update(enemy_list, platform_list, loot_list)
+    player.update(enemy_list, platform_list, loot_list, evol_list)
     movingsprites.draw(screen)
     enemy_list.draw(screen)
     loot_list.draw(screen)
+    evol_list.draw(screen)
     enemy.move()
     stats(player.score)
     pygame.display.flip()
