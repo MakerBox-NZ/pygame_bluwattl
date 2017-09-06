@@ -60,11 +60,6 @@ class Platform(pygame.sprite.Sprite):
         loot = Platform(150, 180, 32, 32, os.path.join('images', 'steak.png'))
         loot_list.add(loot)
         return loot_list
-    def evolution1():
-        evol_list = pygame.sprite.Group()
-        evol = Platform(500, 160, 32, 32, os.path.join('images', 'steak.png'))
-        evol_list.add(evol)
-        return evol_list
 class Player(pygame.sprite.Sprite):
     #spawn
     def __init__(self):
@@ -144,6 +139,23 @@ class Player(pygame.sprite.Sprite):
         if self.rect.y > 960 and self.momentumY >= 0:
             self.momentumY = 0
             self.rect.y = screenY-20
+class PowerUp(pygame.sprite.Sprite):
+    def __init__(self,xloc,yloc,imgw,imgh,img):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([imgw,imgh])
+        self.image.convert_alpha()
+        self.image.set_colorkey(alpha)
+        self.blockpic = pygame.image.load(img).convert()
+        self.rect = self.image.get_rect()
+        self.rect.y = yloc
+        self.rect.x = xloc
+        self.image.blit(self.blockpic,(0,0),(0,0,imgw,imgh))
+                                                                                
+    def evolution1():
+        evol_list = pygame.sprite.Group()
+        evol = PowerUp(500, 160, 32, 32, os.path.join('images', 'steak.png'))
+        evol_list.add(evol)
+        return evol_list
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
         pygame.sprite.Sprite.__init__(self)
@@ -181,11 +193,11 @@ font_size = 24
 myfont = pygame.font.Font(font_path, font_size)
 main = True
 screen = pygame.display.set_mode([screenX, screenY])
-backdrop = pygame.image.load(os.path.join('images','background.png')).convert()
+backdrop = pygame.image.load(os.path.join('images','backgroundwithlogo.png')).convert()
 backdropRect = screen.get_rect()
 platform_list = Platform.level1()
 loot_list = Platform.loot1()
-evol_list = Platform.evolution1()
+evol_list = PowerUp.evolution1()
 player = Player() #Spawn REAL
 player.rect.x = 0
 player.rect.y = 0
@@ -194,7 +206,7 @@ movingsprites.add(player)
 forwardX = 300
 backwardX = 100
 movesteps = 10
-enemy = Enemy(100, 50, 'badguy.png')
+enemy = Enemy(500, 90, 'badguy.png')
 enemy_list = pygame.sprite.Group()
 enemy_list.add(enemy)
 '''LOOP'''
@@ -216,6 +228,11 @@ while main == True:
                 print('          \      / ')
                 print('           \____/  ')
                 print('   You found the secret!       ')
+            if event.key == ord('p'):
+                print('Pika')
+                print('Chu')
+                print('Pika')
+                print('Pi')
             if event.key == pygame.K_UP or event.key == ord('w'):
                pass
         if event.type == pygame.KEYDOWN:
@@ -235,9 +252,9 @@ while main == True:
         for enemy in enemy_list:
             enemy.rect.x -= scroll
         for loot in loot_list:
-            enemy.rect.x -= scroll
-        for evol in evol_list:
             platform.rect.x -= scroll
+        for evol in evol_list:
+            evol.rect.x -= scroll
     if player.rect.x <= backwardX:
         scroll = min(1, (backwardX - player.rect.x))
         player.rect.x = backwardX
@@ -246,9 +263,9 @@ while main == True:
         for enemy in enemy_list:
             enemy.rect.x += scroll
         for loot in loot_list:
-            enemy.rect.x += scroll
-        for evol in evol_list:
             platform.rect.x += scroll
+        for evol in evol_list:
+            evol.rect.x += scroll
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
     player.gravity()
