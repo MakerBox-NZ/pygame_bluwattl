@@ -4,6 +4,10 @@ import sys
 import os
 import turtle
 import pygame.freetype
+
+'''PREINIT'''
+movesteps = 10
+
 '''OBJECTS'''
 
 def stats(score):
@@ -34,30 +38,30 @@ class Platform(pygame.sprite.Sprite):
 
     def level1():
         platform_list = pygame.sprite.Group()
-        block = Platform(0, 200, 101, 77, os.path.join('images', 'block0.png'))
+        block = Platform(0, 300, 101, 77, os.path.join('images', 'block0.png'))
         platform_list.add(block)
-        block = Platform(101, 200, 101, 77, os.path.join('images', 'block1.png'))
+        block = Platform(101, 300, 101, 77, os.path.join('images', 'block1.png'))
         platform_list.add(block)
-        block = Platform(202, 200, 101, 77, os.path.join('images', 'block2.png'))
+        block = Platform(202, 300, 101, 77, os.path.join('images', 'block2.png'))
         platform_list.add(block)
-        block = Platform(303, 200, 101, 77, os.path.join('images', 'block3.png'))
+        block = Platform(303, 300, 101, 77, os.path.join('images', 'block3.png'))
         platform_list.add(block)
-        block = Platform(404, 200, 101, 77, os.path.join('images', 'block4.png'))
+        block = Platform(404, 300, 101, 77, os.path.join('images', 'block4.png'))
         platform_list.add(block)
-        block = Platform(505, 200, 101, 77, os.path.join('images', 'block0.png'))
+        block = Platform(505, 300, 101, 77, os.path.join('images', 'block0.png'))
         platform_list.add(block)
-        block = Platform(606, 200, 101, 77, os.path.join('images', 'block1.png'))
+        block = Platform(606, 300, 101, 77, os.path.join('images', 'block1.png'))
         platform_list.add(block)
-        block = Platform(707, 200, 101, 77, os.path.join('images', 'block2.png'))
+        block = Platform(707, 223, 101, 77, os.path.join('images', 'block2.png'))
         platform_list.add(block)
-        block = Platform(808, 200, 101, 77, os.path.join('images', 'block3.png'))
+        block = Platform(808, 146, 101, 77, os.path.join('images', 'block3.png'))
         platform_list.add(block)
-        block = Platform(909, 200, 101, 77, os.path.join('images', 'block4.png'))
+        block = Platform(909, 146, 101, 77, os.path.join('images', 'block4.png'))
         platform_list.add(block)
         return platform_list
     def loot1():
         loot_list = pygame.sprite.Group()
-        loot = Platform(150, 180, 32, 32, os.path.join('images', 'steak.png'))
+        loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
         loot_list.add(loot)
         return loot_list
 class Player(pygame.sprite.Sprite):
@@ -71,7 +75,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.damage = 0
         self.images = [ ]
-        img = pygame.image.load(os.path.join('images','hero.png')).convert()
+        img = pygame.image.load(os.path.join('images', guy)).convert()
         self.images.append(img)
         self.image = self.images[0]
         self.image = pygame.transform.scale(self.image, (int(100), int(100)))
@@ -82,7 +86,7 @@ class Player(pygame.sprite.Sprite):
         #print('in control') #debug
         self.momentumX += x
         self.momentumY += y
-    def update(self,enemy_list,platform_list,loot_list, evol_list):
+    def update(self,enemy_list,platform_list,loot_list,evol_list,movesteps):
         #print('update') #debug
         currentX = self.rect.x
         nextX = currentX + self.momentumX
@@ -108,6 +112,7 @@ class Player(pygame.sprite.Sprite):
             print(self.score)
             loot_list.remove(loot)
 
+        
         if self.damage == 0:
             for enemy in enemy_hit_list:
                 if not self.rect.contains(enemy):
@@ -132,6 +137,15 @@ class Player(pygame.sprite.Sprite):
                 self.rect.y = currentY
                 self.momentumY = 0
                 self.collide_delta = 0
+    def speed (self, evol_list, movesteps):
+        evol_hit_list = pygame.sprite.spritecollide(self, evol_list, False)
+        for evol in evol_hit_list:
+            movesteps += 10
+            print(movesteps)
+            evol_list.remove(evol)
+        return movesteps
+
+        
     def jump (self, platform_list):
         self.jump_delta = 0
     def gravity(self):
@@ -203,9 +217,10 @@ player.rect.x = 0
 player.rect.y = 0
 movingsprites = pygame.sprite.Group()
 movingsprites.add(player)
+movesteps = player.speed(evol_list, movesteps)
 forwardX = 300
 backwardX = 100
-movesteps = 10
+
 enemy = Enemy(500, 90, 'badguy.png')
 enemy_list = pygame.sprite.Group()
 enemy_list.add(enemy)
@@ -218,10 +233,11 @@ while main == True:
                 sys.exit()
                 main = False
             if event.key == pygame.K_LEFT or event.key == ord('a'):
-                
+               print(str(movesteps) + ' going left')
                player.control(movesteps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'): 
                player.control(-movesteps, 0)
+               print(str(movesteps) + ' going right')
             if event.key == ord('0'):
                 print('           o    o  ')
                 print('         \        /')
@@ -233,14 +249,18 @@ while main == True:
                 print('Chu')
                 print('Pika')
                 print('Pi')
+                print('Do you play a Pokemon game?')
+                print('If yes, is it Pokemon Go?')
+                print('Any others?')
+                print('If no, you are a Pokemon NO!')
             if event.key == pygame.K_UP or event.key == ord('w'):
                pass
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT or event.key == ord('a'):
-               pass
+               
                player.control(-movesteps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
-               pass
+               
                player.control(movesteps, 0)
             if event.key == pygame.K_UP or event.key == ord('w'):
                player.jump(platform_list)
@@ -269,7 +289,8 @@ while main == True:
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
     player.gravity()
-    player.update(enemy_list, platform_list, loot_list, evol_list)
+    player.update(enemy_list, platform_list, loot_list, evol_list, movesteps)
+    movesteps = player.speed(evol_list, movesteps)
     movingsprites.draw(screen)
     enemy_list.draw(screen)
     loot_list.draw(screen)
