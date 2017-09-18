@@ -7,7 +7,7 @@ import pygame.freetype
 
 '''PREINIT'''
 movesteps = 10
-
+guy = "hero.png"
 '''OBJECTS'''
 
 def stats(score):
