@@ -7,7 +7,7 @@ import pygame.freetype
 
 '''PREINIT'''
 movesteps = 10
-guy = "hero.png"
+
 '''OBJECTS'''
 
 def stats(score):
@@ -59,11 +59,38 @@ class Platform(pygame.sprite.Sprite):
         block = Platform(909, 146, 101, 77, os.path.join('images', 'block4.png'))
         platform_list.add(block)
         return platform_list
+    def level2():
+        block = Platform(101, 300, 101, 77, os.path.join('images', 'block0.png'))
+        platform_list.add(block)
+        block = Platform(202, 300, 101, 77, os.path.join('images', 'block1.png'))
+        platform_list.add(block)
+        block = Platform(303, 300, 101, 77, os.path.join('images', 'block2.png'))
+        platform_list.add(block)
+        block = Platform(404, 300, 101, 77, os.path.join('images', 'block3.png'))
+        platform_list.add(block)
+        block = Platform(505, 300, 101, 77, os.path.join('images', 'block4.png'))
+        platform_list.add(block)
     def loot1():
         loot_list = pygame.sprite.Group()
         loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
         loot_list.add(loot)
         return loot_list
+    def loot2():
+        loot_list = pygame.sprite.Group()
+        loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
+        loot_list.add(loot)
+        return loot_list
+class Flag(pygame.sprite.Sprite):
+    def flag1():
+        flag_list = pygame.sprite.Group()
+        flag = Platform(1000, 146, 100, 100, os.path.join('images', 'flag.png'))
+        flag_list.add(flag)
+        return flag_list
+    def flag2():
+        flag_list = pygame.sprite.Group()
+        flag = Platform(1000, 146, 100, 100, os.path.join('images', 'flag.png'))
+        flag_list.add(flag)
+        return flag_list
 class Player(pygame.sprite.Sprite):
     #spawn
     def __init__(self):
@@ -75,7 +102,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.damage = 0
         self.images = [ ]
-        img = pygame.image.load(os.path.join('images', guy)).convert()
+        img = pygame.image.load(os.path.join('images', 'hero.png')).convert()
         self.images.append(img)
         self.image = self.images[0]
         self.image = pygame.transform.scale(self.image, (int(100), int(100)))
@@ -86,7 +113,7 @@ class Player(pygame.sprite.Sprite):
         #print('in control') #debug
         self.momentumX += x
         self.momentumY += y
-    def update(self,enemy_list,platform_list,loot_list,evol_list,movesteps):
+    def update(self,enemy_list,platform_list,loot_list,evol_list,flag_list,movesteps):
         #print('update') #debug
         currentX = self.rect.x
         nextX = currentX + self.momentumX
@@ -112,6 +139,20 @@ class Player(pygame.sprite.Sprite):
             print(self.score)
             loot_list.remove(loot)
 
+        flag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
+        for flag in flag_hit_list:
+            self.score += 5
+            print(self.score)
+        for loot in loot_hit_list:
+            loot_list.remove(loot)
+        for platform in platform_hit_list:
+            platform_list.remove(block)
+        for evol in evol_hit_list:
+            evol_list.remove(evol)
+        level2()
+        evolution2()
+        loot2()
+        flag2()
         
         if self.damage == 0:
             for enemy in enemy_hit_list:
@@ -145,6 +186,7 @@ class Player(pygame.sprite.Sprite):
             evol_list.remove(evol)
         return movesteps
 
+
         
     def jump (self, platform_list):
         self.jump_delta = 0
@@ -166,6 +208,11 @@ class PowerUp(pygame.sprite.Sprite):
         self.image.blit(self.blockpic,(0,0),(0,0,imgw,imgh))
                                                                                 
     def evolution1():
+        evol_list = pygame.sprite.Group()
+        evol = PowerUp(950, 120, 32, 32, os.path.join('images', 'steak.png'))
+        evol_list.add(evol)
+        return evol_list
+    def evolution2():
         evol_list = pygame.sprite.Group()
         evol = PowerUp(500, 160, 32, 32, os.path.join('images', 'steak.png'))
         evol_list.add(evol)
@@ -228,7 +275,7 @@ enemy_list.add(enemy)
 while main == True:
     for event in pygame.event.get():
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
                 main = False
@@ -289,7 +336,7 @@ while main == True:
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
     player.gravity()
-    player.update(enemy_list, platform_list, loot_list, evol_list, movesteps)
+    player.update(enemy_list, platform_list, loot_list, evol_list, flag_list, movesteps)
     movesteps = player.speed(evol_list, movesteps)
     movingsprites.draw(screen)
     enemy_list.draw(screen)
