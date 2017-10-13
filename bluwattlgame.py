@@ -2,7 +2,6 @@
 import pygame
 import sys
 import os
-import turtle
 import pygame.freetype
 
 '''PREINIT'''
@@ -35,64 +34,87 @@ class Platform(pygame.sprite.Sprite):
         # paint the image into the blocks
         self.image.blit(self.blockpic,(0,0),(0,0,imgw,imgh))
 
+    def level(lvl):
 
-    def level1():
-        platform_list = pygame.sprite.Group()
-        block = Platform(0, 300, 101, 77, os.path.join('images', 'block0.png'))
-        platform_list.add(block)
-        block = Platform(101, 300, 101, 77, os.path.join('images', 'block1.png'))
-        platform_list.add(block)
-        block = Platform(202, 300, 101, 77, os.path.join('images', 'block2.png'))
-        platform_list.add(block)
-        block = Platform(303, 300, 101, 77, os.path.join('images', 'block3.png'))
-        platform_list.add(block)
-        block = Platform(404, 300, 101, 77, os.path.join('images', 'block4.png'))
-        platform_list.add(block)
-        block = Platform(505, 300, 101, 77, os.path.join('images', 'block0.png'))
-        platform_list.add(block)
-        block = Platform(606, 300, 101, 77, os.path.join('images', 'block1.png'))
-        platform_list.add(block)
-        block = Platform(707, 223, 101, 77, os.path.join('images', 'block2.png'))
-        platform_list.add(block)
-        block = Platform(808, 146, 101, 77, os.path.join('images', 'block3.png'))
-        platform_list.add(block)
-        block = Platform(909, 146, 101, 77, os.path.join('images', 'block4.png'))
-        platform_list.add(block)
-        return platform_list
-    def level2():
-        block = Platform(101, 300, 101, 77, os.path.join('images', 'block0.png'))
-        platform_list.add(block)
-        block = Platform(202, 300, 101, 77, os.path.join('images', 'block1.png'))
-        platform_list.add(block)
-        block = Platform(303, 300, 101, 77, os.path.join('images', 'block2.png'))
-        platform_list.add(block)
-        block = Platform(404, 300, 101, 77, os.path.join('images', 'block3.png'))
-        platform_list.add(block)
-        block = Platform(505, 300, 101, 77, os.path.join('images', 'block4.png'))
-        platform_list.add(block)
-    def loot1():
-        loot_list = pygame.sprite.Group()
-        loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
-        loot_list.add(loot)
-        return loot_list
-    def loot2():
-        loot_list = pygame.sprite.Group()
-        loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
-        loot_list.add(loot)
-        return loot_list
+        if lvl[-1] == 1:
+            platform_list = pygame.sprite.Group()
+            block = Platform(0, 300, 101, 77, os.path.join('images', 'block0.png'))
+            platform_list.add(block)
+            block = Platform(101, 300, 101, 77, os.path.join('images', 'block1.png'))
+            platform_list.add(block)
+            block = Platform(202, 300, 101, 77, os.path.join('images', 'block2.png'))
+            platform_list.add(block)
+            block = Platform(303, 300, 101, 77, os.path.join('images', 'block3.png'))
+            platform_list.add(block)
+            block = Platform(404, 300, 101, 77, os.path.join('images', 'block4.png'))
+            platform_list.add(block)
+            block = Platform(505, 300, 101, 77, os.path.join('images', 'block0.png'))
+            platform_list.add(block)
+            block = Platform(606, 300, 101, 77, os.path.join('images', 'block1.png'))
+            platform_list.add(block)
+            block = Platform(707, 223, 101, 77, os.path.join('images', 'block2.png'))
+            platform_list.add(block)
+            block = Platform(808, 146, 101, 77, os.path.join('images', 'block3.png'))
+            platform_list.add(block)
+            block = Platform(909, 146, 101, 77, os.path.join('images', 'block4.png'))
+            platform_list.add(block)
+            return platform_list
+
+        elif lvl[-1] == 2:
+            platform_list = pygame.sprite.Group()
+            block = Platform(101, 323, 101, 77, os.path.join('images', 'block0.png'))
+            platform_list.add(block)
+            block = Platform(202, 323, 101, 77, os.path.join('images', 'block1.png'))
+            platform_list.add(block)
+            block = Platform(303, 323, 101, 77, os.path.join('images', 'block2.png'))
+            platform_list.add(block)
+            block = Platform(404, 345, 101, 77, os.path.join('images', 'block3.png'))
+            platform_list.add(block)
+            block = Platform(505, 323, 101, 77, os.path.join('images', 'block4.png'))
+            platform_list.add(block)
+            return platform_list
+            
+    def loot(lvl):
+
+        if lvl[-1] == 1:
+            loot_list = pygame.sprite.Group()
+            loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
+            loot_list.add(loot)
+            return loot_list
+
+        elif lvl[-1] == 2:
+            loot_list = pygame.sprite.Group()
+            loot = Platform(150, 260, 32, 32, os.path.join('images', 'steak.png'))
+            loot_list.add(loot)
+            return loot_list
+
+        else:
+            pass
+
 class Flag(pygame.sprite.Sprite):
-    def flag1():
-        flag_list = pygame.sprite.Group()
-        flag = Platform(1000, 146, 100, 100, os.path.join('images', 'flag.png'))
-        flag_list.add(flag)
-        return flag_list
-    def flag2():
-        flag_list = pygame.sprite.Group()
-        flag = Platform(1000, 146, 100, 100, os.path.join('images', 'flag.png'))
-        flag_list.add(flag)
-        return flag_list
+
+    def flag(lvl):
+
+        if lvl[-1] == 1:
+            flag_list = pygame.sprite.Group()
+            flag = Platform(400, 300, 100, 100, os.path.join('images', 'flag.png'))
+            flag_list.add(flag)
+            return flag_list
+
+        elif lvl[-1] == 2:
+            flag_list = pygame.sprite.Group()
+            flag = Platform(0, 6, 100, 100, os.path.join('images', 'flag.png'))
+            flag_list.add(flag)
+            return flag_list
+
+        else:
+            pass
+
+
 class Player(pygame.sprite.Sprite):
-    #spawn
+    '''
+    The player character
+    '''
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.momentumX = 0
@@ -109,12 +131,14 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image.convert_alpha()
         self.image.set_colorkey(alpha)
+        self.flagged = 0
+        
     def control(self, x, y):
         #print('in control') #debug
         self.momentumX += x
         self.momentumY += y
-    def update(self,enemy_list,platform_list,loot_list,evol_list,flag_list,movesteps):
-        #print('update') #debug
+
+    def update(self,enemy_list,platform_list,loot_list,evol_list,flag_list,movesteps,lvl):
         currentX = self.rect.x
         nextX = currentX + self.momentumX
         self.rect.x = nextX
@@ -129,9 +153,6 @@ class Player(pygame.sprite.Sprite):
             self.jump_delta += 6
     
         enemy_hit_list = pygame.sprite.spritecollide(self, enemy_list, False)
-        '''for enemy in enemy_hit_list:
-            self.score -= 1
-            print(self.score)'''
 
         loot_hit_list = pygame.sprite.spritecollide(self, loot_list, False)
         for loot in loot_hit_list:
@@ -139,21 +160,27 @@ class Player(pygame.sprite.Sprite):
             print(self.score)
             loot_list.remove(loot)
 
-        flag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
-        for flag in flag_hit_list:
+        flag_hit_list = pygame.sprite.spritecollide(self,flag_list,False)
+
+        if self.flagged == 0:
+            for flag in flag_hit_list:
+                flag_hit_list.remove(flag)
+                self.flagged = 1
+                
+        if self.flagged == 1:
             self.score += 5
-            print(self.score)
-        for loot in loot_hit_list:
-            loot_list.remove(loot)
-        for platform in platform_hit_list:
-            platform_list.remove(block)
-        for evol in evol_hit_list:
-            evol_list.remove(evol)
-        level2()
-        evolution2()
-        loot2()
-        flag2()
-        
+            print("Next level.")
+
+            for loot in loot_hit_list:
+                loot_list.remove(loot)
+            for block in platform_list:
+                platform_list.remove(block)
+            for evol in evol_list:
+                evol_list.remove(evol)
+
+            self.flagged = 0
+            lvl.append(lvl[-1] + 1) # increment level
+                
         if self.damage == 0:
             for enemy in enemy_hit_list:
                 if not self.rect.contains(enemy):
@@ -178,6 +205,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.y = currentY
                 self.momentumY = 0
                 self.collide_delta = 0
+
     def speed (self, evol_list, movesteps):
         evol_hit_list = pygame.sprite.spritecollide(self, evol_list, False)
         for evol in evol_hit_list:
@@ -186,15 +214,17 @@ class Player(pygame.sprite.Sprite):
             evol_list.remove(evol)
         return movesteps
 
-
         
     def jump (self, platform_list):
         self.jump_delta = 0
+
     def gravity(self):
         self.momentumY += 3.2
         if self.rect.y > 960 and self.momentumY >= 0:
             self.momentumY = 0
             self.rect.y = screenY-20
+
+
 class PowerUp(pygame.sprite.Sprite):
     def __init__(self,xloc,yloc,imgw,imgh,img):
         pygame.sprite.Sprite.__init__(self)
@@ -207,16 +237,27 @@ class PowerUp(pygame.sprite.Sprite):
         self.rect.x = xloc
         self.image.blit(self.blockpic,(0,0),(0,0,imgw,imgh))
                                                                                 
-    def evolution1():
-        evol_list = pygame.sprite.Group()
-        evol = PowerUp(950, 120, 32, 32, os.path.join('images', 'steak.png'))
-        evol_list.add(evol)
-        return evol_list
-    def evolution2():
-        evol_list = pygame.sprite.Group()
-        evol = PowerUp(500, 160, 32, 32, os.path.join('images', 'steak.png'))
-        evol_list.add(evol)
-        return evol_list
+    def evolution(lvl):
+        print('called')
+        print(lvl[-1])
+        
+        if lvl[-1] == 1:
+            evol_list = pygame.sprite.Group()
+            evol = PowerUp(950, 120, 32, 32, os.path.join('images', 'steak.png'))
+            evol_list.add(evol)
+            return evol_list
+
+        if lvl[-1] > 1:
+            evol_list = pygame.sprite.Group()
+            evol = PowerUp(500, 160, 32, 32, os.path.join('images', 'steak.png'))
+            evol_list.add(evol)
+            return evol_list
+
+        else:
+            print('evol list not created')
+            pass
+
+        
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
         pygame.sprite.Sprite.__init__(self)
@@ -234,10 +275,13 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.x -= 2
         else:
             self.counter = 0
-            print('reset')
 
         self.counter += 1
-'''SETUP'''
+
+'''
+SETUP
+'''
+
 screenX = 480
 screenY = 360
 alpha = (0,0,0)
@@ -256,12 +300,18 @@ main = True
 screen = pygame.display.set_mode([screenX, screenY])
 backdrop = pygame.image.load(os.path.join('images','backgroundwithlogo.png')).convert()
 backdropRect = screen.get_rect()
-platform_list = Platform.level1()
-loot_list = Platform.loot1()
-evol_list = PowerUp.evolution1()
+
+lvl = [] # a list containing levels
+lvl.append(1) # start at level 1
+
+platform_list = Platform.level(lvl)
+loot_list     = Platform.loot(lvl)
+evol_list     = PowerUp.evolution(lvl)
+
 player = Player() #Spawn REAL
 player.rect.x = 0
 player.rect.y = 0
+flag_list = Flag.flag(lvl)
 movingsprites = pygame.sprite.Group()
 movingsprites.add(player)
 movesteps = player.speed(evol_list, movesteps)
@@ -271,7 +321,11 @@ backwardX = 100
 enemy = Enemy(500, 90, 'badguy.png')
 enemy_list = pygame.sprite.Group()
 enemy_list.add(enemy)
-'''LOOP'''
+
+'''
+LOOP
+'''
+
 while main == True:
     for event in pygame.event.get():
         if event.type == pygame.KEYUP:
@@ -279,12 +333,11 @@ while main == True:
                 pygame.quit()
                 sys.exit()
                 main = False
+                
             if event.key == pygame.K_LEFT or event.key == ord('a'):
-               print(str(movesteps) + ' going left')
                player.control(movesteps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'): 
                player.control(-movesteps, 0)
-               print(str(movesteps) + ' going right')
             if event.key == ord('0'):
                 print('           o    o  ')
                 print('         \        /')
@@ -303,11 +356,9 @@ while main == True:
             if event.key == pygame.K_UP or event.key == ord('w'):
                pass
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT or event.key == ord('a'):
-               
+            if event.key == pygame.K_LEFT or event.key == ord('a'):               
                player.control(-movesteps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
-               
                player.control(movesteps, 0)
             if event.key == pygame.K_UP or event.key == ord('w'):
                player.jump(platform_list)
@@ -333,16 +384,26 @@ while main == True:
             platform.rect.x += scroll
         for evol in evol_list:
             evol.rect.x += scroll
+
     screen.blit(backdrop, backdropRect)
     platform_list.draw(screen)
     player.gravity()
-    player.update(enemy_list, platform_list, loot_list, evol_list, flag_list, movesteps)
+    player.update(enemy_list,platform_list,loot_list,evol_list,flag_list,movesteps,lvl)
     movesteps = player.speed(evol_list, movesteps)
     movingsprites.draw(screen)
     enemy_list.draw(screen)
     loot_list.draw(screen)
+    flag_list.draw(screen)
     evol_list.draw(screen)
     enemy.move()
     stats(player.score)
+
+    if lvl[-1] > 1:
+        platform_list = Platform.level(lvl)
+        loot_list     = Platform.loot(lvl)
+        evol_list     = PowerUp.evolution(lvl)
+        flag_list     = Flag.flag(lvl)
+
     pygame.display.flip()
     clock.tick(fps)
+    
